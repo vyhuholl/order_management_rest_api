@@ -1,0 +1,27 @@
+[project]
+name = "order-management-rest-api"
+version = "0.1.0"
+description = "An order management REST API"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "alembic>=1.18.3",
+    "celery>=5.6.2",
+    "fastapi>=0.128.5",
+    "pika>=1.3.2",
+    "pyjwt>=2.11.0",
+    "redis>=7.1.0",
+    "sqlalchemy>=2.0.46",
+]
+
+[tool.ruff]
+line-length = 79
+extend-exclude = [
+    "alembic",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+    "ruff>=0.15.0",
+]
