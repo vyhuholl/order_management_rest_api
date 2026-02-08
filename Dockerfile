@@ -20,8 +20,10 @@ ENV UV_NO_DEV=1
 # Install dependencies
 RUN uv sync --locked
 
-# Copy application code
+# Copy application code and migrations
 COPY app/ ./app/
+COPY alembic/ ./alembic/
+COPY alembic.ini ./
 
 # Expose port
 EXPOSE 8000
