@@ -99,7 +99,28 @@ services:
         condition: service_healthy
     volumes:
       - .:/app
-    command: uv run celery -A app.tasks.celery_app worker --loglevel=info
+    command: uv run celery -A app.tasks worker --loglevel=info
+    networks:
+      - ecommerce_network
+
+  # Pika consumer for new_order queue
+  rabbitmq_consumer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ecommerce_rabbitmq_consumer
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    volumes:
+      - .:/app
+    command: uv run python -m app.tasks.consumer
     networks:
       - ecommerce_network
 
