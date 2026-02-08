@@ -183,7 +183,7 @@ Users are registered with email and password. Passwords are hashed before storag
 
 ```env
 # Database
-DATABASE_URL=postgresql://user:password@localhost:5432/dbname
+DATABASE_URL=postgresql://ecommerce_user:ecommerce_password@postgres:5432/ecommerce_db
 
 # Redis
 REDIS_URL=redis://localhost:6379/0
