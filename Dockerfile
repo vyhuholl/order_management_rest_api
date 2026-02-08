@@ -18,7 +18,7 @@ COPY pyproject.toml uv.lock ./
 ENV UV_NO_DEV=1
 
 # Install dependencies
-RUN uv sync --locked
+RUN uv sync --locked --no-cache
 
 # Copy application code and migrations
 COPY app/ ./app/

@@ -20,15 +20,15 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
     """Upgrade schema."""
-    order_status = postgresql.ENUM(
-        "PENDING",
-        "PAID",
-        "SHIPPED",
-        "CANCELED",
-        name="order_status",
-        create_type=True,
-    )
-    order_status.create(op.get_bind(), checkfirst=True)
+    # Create ENUM type only if it doesn't exist
+    op.execute("""
+        DO $$ BEGIN
+            CREATE TYPE order_status AS ENUM ('PENDING', 'PAID', 'SHIPPED', 'CANCELED');
+        EXCEPTION
+            WHEN duplicate_object THEN null;
+        END $$;
+    """)
+    
     op.create_table(
         "orders",
         sa.Column("id", sa.String(length=36), nullable=False),
@@ -37,7 +37,14 @@ def upgrade() -> None:
         sa.Column("total_price", sa.Float(), nullable=False),
         sa.Column(
             "status",
-            order_status,
+            postgresql.ENUM(
+                "PENDING",
+                "PAID",
+                "SHIPPED",
+                "CANCELED",
+                name="order_status",
+                create_type=False,  # Don't create type here, we did it above
+            ),
             nullable=False,
         ),
         sa.Column(
@@ -56,4 +63,5 @@ def downgrade() -> None:
     """Downgrade schema."""
     op.drop_index(op.f("ix_orders_user_id"), table_name="orders")
     op.drop_table("orders")
-    op.execute("DROP TYPE order_status")
+    # Only drop the type if no other tables are using it
+    op.execute("DROP TYPE IF EXISTS order_status")
