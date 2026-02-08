@@ -1,10 +1,12 @@
 """Main application module."""
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.util import get_remote_address
+
+from app.routes.auth import router as auth_router
 
 # Create rate limiter instance
 limiter = Limiter(key_func=get_remote_address)
@@ -35,10 +37,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(auth_router)
+
 
 @app.get("/")
 @limiter.limit("5/minute")
-async def root():
+async def root(request: Request):  # noqa: ARG001
     """Root endpoint to verify API is running."""
     return {"message": "E-Commerce Order API is running"}
 

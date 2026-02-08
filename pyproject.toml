@@ -3,15 +3,18 @@ name = "order-management-rest-api"
 version = "0.1.0"
 description = "An order management REST API"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.12"
 dependencies = [
     "alembic>=1.18.3",
     "celery>=5.6.2",
+    "email-validator>=2.3.0",
     "fastapi>=0.128.5",
     "pika>=1.3.2",
-    "pwdlib>=0.3.0",
+    "psycopg2-binary>=2.9.11",
+    "pwdlib[argon2]>=0.3.0",
     "pyjwt>=2.11.0",
     "python-dotenv>=1.2.1",
+    "python-multipart>=0.0.22",
     "redis>=7.1.0",
     "slowapi>=0.1.9",
     "sqlalchemy>=2.0.46",
@@ -25,6 +28,7 @@ extend-exclude = [
 
 [dependency-groups]
 dev = [
+    "httpx>=0.28.0",
     "pytest>=9.0.2",
     "pytest-cov>=7.0.0",
     "ruff>=0.15.0",
